@@ -82,6 +82,7 @@ const Home: NextPage<Props> = ({
 	)
 }
 
+
 // export const getStaticProps: GetStaticProps<Props> = async () => {
 // 	const prisma = new PrismaClient()
 // 	try {
