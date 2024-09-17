@@ -16,14 +16,12 @@ interface Props {
 }
 
 const Skills = ({ skillSet }: Props) => {
-	if(!skills || skills.length === 0 ){
-		return <div>No Skills Loaded</div>;
-	}
 	const [currSkill, setCurrSkill] = useState(skillSet[0])
 	const skillsBgRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		// change the bg color of the skills section
+		console.log("currentSkill:*************", currSkill)
 		if (skillsBgRef.current) {
 			skillsBgRef.current.style.setProperty(
 				"--skills-bg-color",
@@ -108,14 +106,14 @@ const Skills = ({ skillSet }: Props) => {
 									transition={{ duration: 0.2 }}
 									className="overflow-auto h-[calc(100%-38px)] sm:h-[calc(100%-60px)]"
 								>
-									<div className="my-[28px] sm:my-[32px] mx-auto w-[254px] sm:w-[455px] flex fex-row flex-wrap sm:gap-y-[16px] sm:gap-x-[77px] gap-y-[22px] gap-x-[7px]">
+									<div className="my-[28px] sm:my-[32px] mx-auto w-[254px] sm:w-[455px] flex flex-row flex-wrap sm:gap-y-[16px] sm:gap-x-[77px] gap-y-[22px] gap-x-[7px]">
 										{currSkill.skills.map(
 											(singleSkill, i) => (
 												<div
 													key={singleSkill.id}
 													className="sm:w-[100px] w-[80px] text-center "
 												>
-													<div className="sm:w-[68px] sm:h-[68px] w-[40px] h-[40px] mx-auto mb-1 relative rounded-full">
+													{/* <div className="sm:w-[68px] sm:h-[68px] w-[40px] h-[40px] mx-auto mb-1 relative rounded-full">
 														<Image
 															src={
 																singleSkill.logo
@@ -130,7 +128,7 @@ const Skills = ({ skillSet }: Props) => {
 															placeholder="blur"
 															blurDataURL="L9QlS^oe0IofI9ayIUfP0Fay07WW"
 														/>
-													</div>
+													</div> */}
 													<img
 														src={singleSkill.logo}
 														alt={singleSkill.name}

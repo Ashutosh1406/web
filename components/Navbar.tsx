@@ -56,23 +56,43 @@ const Navbar = (props: Props) => {
 
 	const btnRef = useRef<HTMLButtonElement>(null)
 
+	// useEffect(() => {
+	// 	const closeNavbar = (e: any) => {
+	// 		if (!e.path.includes(btnRef.current)) {
+	// 			if (
+	// 				isNavOpen &&
+	// 				currBreakpoint !== "xl" &&
+	// 				currBreakpoint !== "xxl"
+	// 			) {
+	// 				setisNavOpen(false)
+	// 			}
+	// 		}
+	// 	}
+	// 	document.body.addEventListener("click", closeNavbar)
+	// 	return () => {
+	// 		document.body.removeEventListener("click", closeNavbar)
+	// 	}
+	// }, [isNavOpen])
+
 	useEffect(() => {
 		const closeNavbar = (e: any) => {
-			if (!e.path.includes(btnRef.current)) {
+			const path = e.composedPath ? e.composedPath() : e.path;
+			if (path && !path.includes(btnRef.current)) {
 				if (
 					isNavOpen &&
 					currBreakpoint !== "xl" &&
 					currBreakpoint !== "xxl"
 				) {
-					setisNavOpen(false)
+					setisNavOpen(false);
 				}
 			}
-		}
-		document.body.addEventListener("click", closeNavbar)
+		};
+		document.body.addEventListener("click", closeNavbar);
 		return () => {
-			document.body.removeEventListener("click", closeNavbar)
-		}
-	}, [isNavOpen])
+			document.body.removeEventListener("click", closeNavbar);
+		};
+	}, [isNavOpen, currBreakpoint]);
+	
 
 	return (
 		<>

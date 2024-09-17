@@ -4,7 +4,7 @@ import WorkCard from "./WorkCard"
 import AllProjectsIcon from "../public/images/allProjects.svg"
 import Link from "next/link"
 import * as gtag from "../lib/gtag"
-import { Prisma, PrismaClient, projects } from "@prisma/client"
+import { projects } from "@prisma/client"
 import ScrollAnimation from "./ScrollAnimation"
 import bounceVariant from "../animation/bounceVariant"
 import { motion } from "framer-motion"
@@ -12,7 +12,6 @@ import Slider from "react-slick"
 import { getCurrentBreakpoint } from "../utils/tailwindBreakpoint"
 import Back from "../public/images/work-back.svg"
 import Next from "../public/images/work-next.svg"
-import { GetServerSideProps} from "next"
 
 interface Props {
 	projects: (projects & { placeholder: [] })[]
@@ -32,31 +31,13 @@ var settings = {
 	draggable: false,
 	variableWidth: true
 }
-export const getServerSideProps: GetServerSideProps = async () => {
-	const prisma = new PrismaClient()
-	const projects = await prisma.projects.findMany()
-  
-	return {
-	  props: {
-		projects: projects || [], // Default to an empty array if projects is undefined
-	  },
-	}
-  }
-  
 
 function Work({ projects }: Props): ReactElement {
-
-	// if(!projects || projects.length === 0){
-	// 	return <div>No Projects availiable at the moment</div>;
-	// }
 	const [isModalOpen, setIsModalOpen] = useState(false)
-	// const [currProject, setCurrProject] = useState<projectWithPlaceholder>({
-	// 	...projects[0],
-	// 	placeholder: []
-	// })
-
-	const [currProject, setCurrProject] = useState<projectWithPlaceholder | null>(null)
-	
+	const [currProject, setCurrProject] = useState<projectWithPlaceholder>({
+		...projects[0],
+		placeholder: []
+	})
 	const [currBreakpoint, setCurrBreakpoint] = useState<string | undefined>(
 		getCurrentBreakpoint()
 	)
@@ -142,9 +123,7 @@ function Work({ projects }: Props): ReactElement {
 			rightScrollIcon.current?.classList.add("scale-0")
 		}
 	}
-	if (!Array.isArray(projects) || projects.length === 0) {
-		return <div>No Projects available at the moment</div>
-	}
+
 	return (
 		<>
 			<div
@@ -275,7 +254,7 @@ function Work({ projects }: Props): ReactElement {
 				)}
 			</ScrollAnimation>
 
-			{isModalOpen && currProject && (
+			{isModalOpen && (
 				<Modal
 					setIsModalOpen={setIsModalOpen}
 					isModalOpen={isModalOpen}

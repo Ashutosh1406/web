@@ -9,7 +9,6 @@ import Work from "../components/Work"
 import Skills from "../components/Skills"
 import {
 	skills_set,
-	PrismaClient,
 	skills,
 	experience,
 	projects
@@ -17,6 +16,11 @@ import {
 import backgrounds from "../public/backgrounds"
 import { useEffect } from "react"
 import { getPlaiceholder } from "plaiceholder"
+import { GetStaticProps } from 'next';
+import { PrismaClient } from "@prisma/client"
+
+
+// const prisma = new PrismaClient()
 
 type SkillsSetType = skills_set & { skills: skills[] }
 
@@ -31,6 +35,8 @@ const Home: NextPage<Props> = ({
 	experiences,
 	projectsWithPlaceholder
 }) => {
+
+	console.log(skillSet)
 	const randomBackground = () => {
 		const randomindex = Math.floor(Math.random() * backgrounds.length)
 		return backgrounds[randomindex].url
@@ -46,7 +52,7 @@ const Home: NextPage<Props> = ({
 	return (
 		<div>
 			<Head>
-				<title>Sarthak Portfolio</title>
+				<title>Ashutosh Portfolio</title>
 				<meta
 					name="description"
 					content="Portfolio website for software developer Sarthak Ahuja"
@@ -76,33 +82,91 @@ const Home: NextPage<Props> = ({
 	)
 }
 
-export default Home
-
-// export const getStaticProps = async () => {
+// export const getStaticProps: GetStaticProps<Props> = async () => {
 // 	const prisma = new PrismaClient()
-// 	const skillSet: SkillsSetType[] = await prisma.skills_set.findMany({
+// 	try {
+// 	const experiences = await prisma.experience.findMany();
+// 	const skillSet = await prisma.skills_set.findMany({
 // 		include: {
-// 			skills: true
+// 			skills:true,
 // 		}
-// 	})
-
-// 	const experiences: experience[] = await prisma.experience.findMany({})
-// 	const projects: projects[] = await prisma.projects.findMany({})
-
-// 	const projectsWithPlaceholder = await Promise.all(
-// 		projects.map(async (project) => {
-// 			const images = project.image
-// 			const placeholder = await Promise.all(
-// 				images.map(async (image) => {
-// 					const { base64 } = await getPlaiceholder(image)
-// 					return base64
-// 				})
-// 			)
-// 			return { ...project, placeholder }
-// 		})
-// 	)
-
+// 	});
+// 	const projects = await prisma.projects.findMany();
+// 	const projectsWithPlaceholder = projects.map(project => ({
+// 		...project,
+// 		placeholder: [], // Add any default value you want for placeholder
+// 	  }));
+// 	console.log('*********MongoDB DATA', experiences); // Debugging line
+// 	console.log(">>>>>>skills",skillSet)
 // 	return {
-// 		props: { skillSet, experiences, projectsWithPlaceholder }
+// 		props: { experiences, skillSet, projectsWithPlaceholder },
+// 	};
+// 	} catch (error) {
+// 	  console.error('Error fetching experiences:', error); // Debugging line
+// 	return {
+// 		props: { experiences: [] ,  skillSet: [], projectsWithPlaceholder[]}, // Handle errors by returning an empty array
+// 	};
 // 	}
-// }
+// };
+
+
+// new
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+	const prisma = new PrismaClient();
+	try {
+	  const experiences = await prisma.experience.findMany();
+	  const skillSet = await prisma.skills_set.findMany({
+		include: {
+		  skills: true,
+		},
+	  });
+  
+	  const projects = await prisma.projects.findMany();
+  
+	  // Add placeholder array to each project
+	  const projectsWithPlaceholder = projects.map(project => ({
+		...project,
+		placeholder: [], // Add any default value you want for placeholder
+	  }));
+  
+	  return {
+		props: {
+		  experiences,
+		  skillSet,
+		  projectsWithPlaceholder, // Ensure this is properly included in the returned props
+		},
+	  };
+	} catch (error) {
+	  console.error('Error fetching data:', error);
+	  return {
+		props: {
+		  experiences: [],
+		  skillSet: [],
+		  projectsWithPlaceholder: [], // Handle errors by returning an empty array
+		},
+	  };
+	}
+  };
+  
+
+
+//   export const getProps:GetStaticProps<Props> = async() => {
+// 	const prisma = new PrismaClient()
+
+// 		try{
+// 		const skillSet = await prisma.skills_set.findMany()
+
+// 		console.log('*********MongoDB DATA', skillSet) // Debugging line
+// 		return {
+// 			props: { skillSet },
+// 		}
+// 	} catch (error) {
+// 		console.error('Error fetching skillSet:', error) // Debugging line
+// 		return {
+// 			props: { skillSet: [] }, // Handle errors by returning an empty array
+// 		}
+// 	}
+//   }
+
+export default Home

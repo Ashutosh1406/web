@@ -1,11 +1,25 @@
 import React, { ReactElement } from "react"
 import { experience } from "@prisma/client"
+import { GetStaticProps } from 'next';
+import { PrismaClient } from "@prisma/client";
 
-interface Props {
-	experience: experience
-}
+// interface Props {
+// 	experience: experience
+// }
 
-function Experience({ experience }: Props): ReactElement {
+interface ExperienceProps {
+	experience: {
+	  id: string;
+	  company_name: string;
+	  starting_date: string;
+	  ending_date: string;
+	  position: string;
+	  description: string[];
+	};
+  }
+function Experience({ experience }: ExperienceProps): ReactElement {
+
+	console.log(experience)
 	return (
 		<div className="w-full xl:w-[424px]  ">
 			<div className="mb-4">
